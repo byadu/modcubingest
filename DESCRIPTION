@@ -1,0 +1,11 @@
+Package: modcubingest
+Title: A 'shiny' Module for ingesting data into 'cuborg' data warehouse
+Version: 0.1
+License: MIT + file LICENSE
+Author: Yadu Balehosur <yadu@vizualytics.com>
+Maintainer: Yadu Balehosur <yadu@vizualytics.com>
+Description: This module uploads 'Excel' files and import data from databases.
+NeedsCompilation: no
+Imports: shiny, shinyBS, DT, libcubmeta, libcubolap, dplyr, RMySQL, DBI
+Packaged: 2020-07-19 02:28:52 UTC; cubot
+RoxygenNote: 7.0.1
