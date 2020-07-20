@@ -3,7 +3,23 @@ doadddata<- function(est_storeid, est_storename, est_storetype, est_dirdsn, est_
 #	dbWriteTable(configdb, "etl_dbstore", connect, row.names=F, append=T)
 	}
 
-addtables<- function(input, output, session) {
+#' @rawNamespace import(shiny, except = c(renderDataTable, dataTableOutput))
+#' @import shinyBS
+#' @import DT
+#' @import libcubmeta
+#' @import libcubolap
+#' @import dplyr
+#' @import RMySQL
+#' @importFrom utils head
+#' @export
+#' @title addtables
+#' @description Add tables from a data base into the 'cuborg' data warehouse
+#' @param input is shiny input variable
+#' @param output is shiny output variable
+#' @param session is shiny session variable
+#' @param M is the meta data connection structure
+#' @param D is the data connection structure
+addtables<- function(input, output, session, M, D) {
 	ns<- session$ns
 	datadb<- NULL
 
@@ -99,7 +115,7 @@ addtables<- function(input, output, session) {
 d
 
 		datadb<<-dbConnect(MySQL(), user=uid,password=pass,dbname=name, host=host, port=as.integer(port))
-		tabs<- getalltabs(datadb, name)
+		tabs<- gettabs(datadb)
 		tabs<- as.vector(tabs[,1])
 		tabs<- head(tabs, 50)
 		tabs<- paste(tabs, collapse=' ')
@@ -110,7 +126,12 @@ d
 		})
 	}
 
-addtablesUI<- function(id) {
+#' @export
+#' @title addtablesUI
+#' @description UI for adding tables to 'cuborg' data warehouse
+#' @param id is caller id
+#' @param M is the meta data connection structure
+addtablesUI<- function(id, M) {
 	ns<- NS(id)
 	dbstores<- getdbstores(M$cfg)
 	stores<- dbstores$est_storename

@@ -1,8 +1,8 @@
-addstore<- function(est_storeid, est_storename, est_storetype, est_dirdsn, est_dbdirid) {
-	dbWriteTable(configdb, "etl_store", connect, row.names=F, append=T)
-	}
+#addstore<- function(cfg, est_storeid, est_storename, est_storetype, est_dirdsn, est_dbdirid) {
+#	dbWriteTable(cfg, "etl_store", connect, row.names=F, append=T)
+#	}
 
-adddbstore<- function(storeid, host, name, uid, pass, port) {
+adddbstore<- function(cfg, storeid, host, name, uid, pass, port) {
 	if(is.na(host)) return(NULL)
 	dsn<- 'Mysql Dsn'
 	connect<- cbind(storeid[1], dsn[1], host[1], name[1], uid[1], pass[1], port[1])
@@ -11,10 +11,18 @@ adddbstore<- function(storeid, host, name, uid, pass, port) {
 	connect[,2:6]<-as.character(connect[,2:6])
 	connect[,7]<- as.integer(connect[,7])
 	connect<- as.data.frame(connect)
-	dbWriteTable(configdb, "etl_dbstore", connect, row.names=F, append=T)
+	dbWriteTable(cfg, "etl_dbstore", connect, row.names=F, append=T)
 	}
 
-cfgdata<- function(input, output, session) {
+#' @export
+#' @title cfgdata
+#' @description Add new data source for ingestion
+#' @param input is shiny input variable
+#' @param output is shiny output variable
+#' @param session is shiny session variable
+#' @param M is the meta data connection structure
+#' @param D is the data connection structure
+cfgdata<- function(input, output, session, M, D) {
 	ns<- session$ns
 	datadb<- NULL
 
@@ -57,7 +65,12 @@ cfgdata<- function(input, output, session) {
 #	observeEvent(input$
 	}
 
-cfgdataUI<- function(id) {
+#' @export
+#' @title cfgdataUI
+#' @description UI for configuring new data source for ingestion
+#' @param id is caller id
+#' @param M is the meta data connection structure
+cfgdataUI<- function(id, M) {
 	ns<- NS(id)
 	cfgdbs<- getdbstores(M$cfg)
 	print(cfgdbs)
